@@ -12,7 +12,6 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
  * environment. Where a publisher announces messages that are organized in different topics
  * and subtopics, such as office/printer, office/lights, banking/balance, banking/exchange/eur
  * etc. In turn, the subscriber listens for messages on different topics as follows.
- * <p>
  * a) strictly messages send to a specific subtopic (for example topic->subtopic)
  * b) any messages that are related to a topic and consequently to its subtopics
  * c) messages that are related to a subtopic that is common for all topics
@@ -53,9 +52,8 @@ public class mqtttPublisher {
             System.out.println("Connected");
 
             // sending messages
-
             // a) strictly messages send to a specific subtopic (for example office->staff)
-            publishMessage("/office/staff/admin", "There are 5 people in the room", 1, false);
+            publishMessage("/office/staff/admin", "There are 5 people in the room", 1, true);
 
             // b) any messages that are related to a topic and consequently to its subtopics
             publishMessage("/office", "Welcome!", 1, false);
@@ -92,7 +90,6 @@ public class mqtttPublisher {
     private static void publishMessage(String topic, String payload, int qos, boolean retained) {
 
         System.out.println("Publishing message: " + payload + " on topic " + topic);
-
         // Create message payload to be published, setting retained and qos
         MqttMessage message = new MqttMessage(payload.getBytes());
 
