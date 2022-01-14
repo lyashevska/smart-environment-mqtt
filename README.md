@@ -1,6 +1,6 @@
 # smart-environment-mqtt
 
-MQTT Smart Office using Eclipse Mosquitto message broker.
+MQTT Smart Office using Eclipse Mosquitto message broker. Eclipse Paho is used to send subscribe and publish messages to the Mosquitto broker.
 
 Examples of the following operations are implemented:
 

@@ -5,9 +5,18 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 /**
- *
  * @author olga
- * client 1
+ * @date 14/01/2022
+ * Question 1.
+ * By using the MQTT protocol implement the Publisher/Subscriber parts for a smart
+ * environment. Where a publisher announces messages that are organized in different topics
+ * and subtopics, such as office/printer, office/lights, banking/balance, banking/exchange/eur
+ * etc. In turn, the subscriber listens for messages on different topics as follows.
+ * <p>
+ * a) strictly messages send to a specific subtopic (for example topic->subtopic)
+ * b) any messages that are related to a topic and consequently to its subtopics
+ * c) messages that are related to a subtopic that is common for all topics
+ * d) Finally, show and explain how you can implement durable subscriptions?
  */
 public class mqtttPublisher {
 
@@ -29,13 +38,12 @@ public class mqtttPublisher {
             sampleClient = new MqttClient(broker, clientId, persistence);
             MqttConnectOptions connOpts = new MqttConnectOptions();
 
-            // if cleanSession is true before connecting the client,
-            // then all pending publication deliveries for the client are removed
-            // when the client connects.
-            // cleanSession = true --> durable connection
-            connOpts.setCleanSession(true);
 
-            // set keep alive interval
+            // d) show and explain how you can implement durable subscriptions
+            // cleanSession = true --> not durable connection
+            // false --> will not clean the session
+            connOpts.setCleanSession(false);
+
             // after 180 sec the client is dead
             connOpts.setKeepAliveInterval(180);
 
@@ -45,17 +53,24 @@ public class mqtttPublisher {
             System.out.println("Connected");
 
             // sending messages
-            publishMessage("/house/power/switches", "on", 2, false);
-            publishMessage("/house/water", "off", 1, false);
-            publishMessage("/house", "this house is great", 0, true);
-            publishMessage("/garden/water", "on", 1, false);
 
+            // a) strictly messages send to a specific subtopic (for example office->staff)
+            publishMessage("/office/staff/admin", "There are 5 people in the room", 1, false);
+
+            // b) any messages that are related to a topic and consequently to its subtopics
+            publishMessage("/office", "Welcome!", 1, false);
+            publishMessage("/office/lights", "on", 1, false);
+            publishMessage("/office/windows", "on", 1, false);
+
+            // c) messages that are related to a subtopic that is common for all topics
+            publishMessage("/lab/staff", "There are 15 people in the room", 1, false);
+            publishMessage("/office/staff", "There are 25 people in the room", 1, false);
 
             //disconnect
             sampleClient.disconnect();
             System.out.println("Disconnected");
 
-            // Close
+            // close
             sampleClient.close();
             System.exit(0);
 
@@ -80,6 +95,7 @@ public class mqtttPublisher {
 
         // Create message payload to be published, setting retained and qos
         MqttMessage message = new MqttMessage(payload.getBytes());
+
         message.setRetained(retained);
         message.setQos(qos);
 

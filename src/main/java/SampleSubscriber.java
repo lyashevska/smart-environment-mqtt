@@ -2,7 +2,10 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-
+/**
+@author olga
+@date 14/01/2022
+ */
 class SampleSubscriber implements MqttCallback {
 
     public SampleSubscriber() {
